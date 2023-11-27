@@ -4,7 +4,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import { AgGridReact } from "ag-grid-react";
 import { format } from 'date-fns';
 import { Button } from "@mui/material";
-import AddTraining from "./AddTraining";
+
 
 export default function Traininglist (){
 
@@ -20,8 +20,10 @@ export default function Traininglist (){
         {field: 'duration', headerName: 'Kesto', sortable: true, filter: true },
         {field: 'customer.firstname', headerName: 'etunimi',sortable: true, filter: true, width: 150 },
         {field: 'customer.lastname', headerName: 'sukunimi',sortable: true, filter: true, width: 150 },
-        
-    ]);
+        {cellRenderer: params => <Button size='small' onClick={() => deleteTraining(params.data.id)}>Delete</Button>,
+ width: 120}
+        ]);
+    
     const [trainings, setTrainings] = useState([]);
     useEffect(() => fetchData(), []);
     const fetchData = () =>{
@@ -31,8 +33,8 @@ export default function Traininglist (){
             console.log('Data from API:', data);
             setTrainings(data)})
     }
+
     const saveTraining = (training) => {
-        // Modify the 'customer' property to hold the customer reference link
         training.customer = "https://localhost:8080/api/customers/2";
       
         fetch('http://traineeapp.azurewebsites.net/api/trainings', {
@@ -65,10 +67,23 @@ export default function Traininglist (){
         .then(res => fetchData())
         .catch(err => console.error(err));
     };
+    const deleteTraining = (id) => {
+        const url = `http://traineeapp.azurewebsites.net/api/trainings/${id}`;
     
+        console.log('url:', url);
+        if (window.confirm("Are you sure")) {
+            fetch(url, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok)
+                        fetchData(); // Use the default endpoint after delete
+                    else
+                        throw new Error('Error in DELETE' + response.statusText);
+                })
+                .catch(err => console.error(err));
+        }
+    };
     return (
         <div>
-        <AddTraining saveTraining={saveTraining}/>
         <div className="ag-theme-material" style= {{ width: '80%', height: 500}} >
             <AgGridReact
                 rowData={trainings}

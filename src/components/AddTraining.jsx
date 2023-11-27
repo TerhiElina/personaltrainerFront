@@ -8,13 +8,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import moment from "moment";
 
 export default function AddTraining(props) {
+    const { saveTraining, fetchData, customerUrl } = props;
     const [open, setOpen] = useState(false);
     const [training, setTraining] = useState({
-        date: '', duration: '', activity: '', firstname: '', lastname: ''
+        date: '',
+        duration: '',
+        activity: '',
+        customer: customerUrl
     });
     const [formattedDate, setFormattedDate] = useState('');
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (event) => {
+        event.preventDefault();
         setOpen(true);
     };
 
@@ -23,37 +28,71 @@ export default function AddTraining(props) {
     };
 
     const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        if (name === 'date') {
-            setFormattedDate(value);
-        } else {
-            setTraining({ ...training, [name]: value });
-        }
-    };
+    const { name, value } = event.target;
+    if (name === 'date') {
+        setFormattedDate(value);
 
-    const addTraining = () => {
+        setTraining({ ...training, date: value });
+    } else {
+        setTraining({ ...training, [name]: value });
+    }
+};
+const handleInputDate = (date) => {
+    setFormattedDate(date);
+
+};
+
+    const addTraining = (url, event) => {
+        event.preventDefault();
         if (formattedDate.trim() !== '') {
+            console.log('Formatted Date:', formattedDate);
             const parsedDate = moment(formattedDate, 'DD.MM.YYYY HH:mm');
+            console.log('Parsed Date:', parsedDate.format());
             if (parsedDate.isValid()) {
-                const isoDate = parsedDate.toISOString();
+                const isoDate = parsedDate.utc().toISOString();
+                console.log('ISO Date:', isoDate);
                 setTraining({ ...training, date: isoDate });
             } else {
-                // Handle invalid date input
                 console.error('Invalid date format');
                 return;
             }
         } else {
-            // If the input date is empty, set it to an empty string in the state
             setTraining({ ...training, date: '' });
         }
+       
 
-        props.saveTraining(training);
+    
+        fetch('http://traineeapp.azurewebsites.net/api/trainings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(training),
+        })
+            .then(response => {
+                if (response.ok) {
+                    fetchData(); 
+                    console.log('Save successful');
+                    return response.json();
+                } else {
+                    throw new Error('Error in POST: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                handleClose();
+            })
+            .catch(err => {
+                console.error('Save error:', err);
+            });
+            props.saveTraining(training);
         handleClose();
-    }
+    };
+    
 
     return (
         <React.Fragment>
-            <Button style={{ margin: 20 }} variant="outlined" onClick={handleClickOpen}>
+            <Button size = 'small'  onClick={(event) => handleClickOpen(event)}>
                 Lisää treeni
             </Button>
             <Dialog open={open} onClose={handleClose}>
@@ -64,7 +103,7 @@ export default function AddTraining(props) {
                         margin="dense"
                         name="date"
                         value={formattedDate}
-                        onChange={e => handleInputChange(e)}
+                        onChange={e => handleInputDate(e.target.value)}
                         label="Päivä"
                         fullWidth
                         variant="standard"
@@ -88,28 +127,11 @@ export default function AddTraining(props) {
                         fullWidth
                         variant="standard"
                     />
-                    <TextField
-                        margin="dense"
-                        name="firstname"
-                        value={training.firstname}
-                        onChange={e => handleInputChange(e)}
-                        label="Etunimi"
-                        fullWidth
-                        variant="standard"
-                    />
-                    <TextField
-                        margin="dense"
-                        name="lastname"
-                        value={training.lastname}
-                        onChange={e => handleInputChange(e)}
-                        label="Sukunimi"
-                        fullWidth
-                        variant="standard"
-                    />
+                  
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Peruuta</Button>
-                    <Button onClick={addTraining}>Tallenna</Button>
+                    <Button onClick={(event) => addTraining(customerUrl, event)}>Tallenna</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
