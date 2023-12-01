@@ -12,6 +12,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/react": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.16",
     "ag-grid-community": "^30.2.1",
@@ -21,8 +24,12 @@
     "match-sorter": "^6.3.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-big-calendar": "^1.8.5",
+    "react-csv": "^2.2.2",
+    "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
+    "react-table": "^7.8.0",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {

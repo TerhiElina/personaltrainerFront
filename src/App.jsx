@@ -14,19 +14,20 @@ function App() {
       <AppBar position='static'>
       <Toolbar>
         
-        <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{ my: 2, color: 'white', display: 'block' }}
-            
-          >
-            <nav>
-          <Link to={"/"}>Harjoitukset </Link>
-          <Link to={"/customers"}>Asiakkaat </Link>
+       
+            <nav style={{ display: 'flex', gap: '20px' }}>
+          <Link to={"/"} style={{ textDecoration: 'none', color: 'white' }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Harjoitukset
+            </Typography>
+          </Link>
+          <Link to={"/customers"} style={{ textDecoration: 'none', color: 'white' }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Asiakkaat
+            </Typography></Link>
+          <Link to={"/Calendar"} style={{ textDecoration: 'none', color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Kalenteri
+          </Typography></Link>
           </nav>
-          </Typography> 
+         
     </Toolbar>
     </AppBar>
     <Outlet />

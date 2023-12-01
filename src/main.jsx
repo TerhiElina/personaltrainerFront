@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Customers from './components/Customers.jsx';
 import Trainings from './components/Trainings.jsx';
 import Error from './components/Error.jsx'
+import Calendar from './components/Calendar.jsx'
 //import Home from './components/Home.jsx';
 
 const router = createBrowserRouter([ // Import components that are used in routes
@@ -21,6 +22,10 @@ index: true // index route does not need any path
 path: "customers", // path can be defined relative to the parent path
 element: <Customers />,
 },
+{
+  path: "Calendar", // path can be defined relative to the parent path
+  element: <Calendar />,
+  },
 ],
 errorElement: <Error />
 }

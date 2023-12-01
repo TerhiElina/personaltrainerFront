@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
 import AddTraining from "./AddTraining";
-
+import { CSVLink } from "react-csv";
 export default function Customerlist (){
     const [columnDefs] = useState([
         {field: 'firstname',headerName: 'Etunimi',  sortable: true, filter: true },
@@ -76,31 +76,45 @@ export default function Customerlist (){
         // Modify the 'customer' property to hold the customer reference link
         console.log('Training object before fetch:', training);
         fetch('http://traineeapp.azurewebsites.net/api/trainings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(training),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(training),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Make sure to return the parsed JSON here
+            } else {
+                throw new Error('Error in POST: ' + response.statusText);
+            }
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            fetchData();
         })
         .catch(err => {
             console.error('Save error:', err);
-            throw err; // Re-throw the error to propagate it to the next catch block
-        })
-          .then(response => fetchData())
-          .catch(err => console.error(err))
-          .then(response => {
-            console.log('Save successful');
-            return response.json();
-          })
-          .then(data => {
-            console.log('Response data:', data);
-            fetchData();
-          })
-          .catch(err => console.error('Save error:', err));
-      };
+        });
+    };
+      const csvData = [
+        ["firstname", "lastname", "streetaddress", "postcode", "city", "email", "phone"],
+        ...customers.map(({ firstname, lastname, streetaddress, postcode, city, email, phone }) => [
+          firstname || '', 
+          lastname || '',
+          streetaddress || '',
+          postcode || '',
+          city || '',
+          email || '',
+          phone || '',
+        ]),
+      ];
     return (
         <div>
         <AddCustomer saveCustomer={saveCustomer}/>
+        <CSVLink className="downloadbtn" filename="my-file.csv" data={csvData}>
+        Export to CSV
+      </CSVLink>
         <div className="ag-theme-material" style= {{ width: '80%', height: 500}} >
             <AgGridReact
                 rowData={customers}

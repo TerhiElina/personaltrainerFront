@@ -80,13 +80,14 @@ const handleInputDate = (date) => {
             })
             .then(data => {
                 console.log('Response data:', data);
+                props.saveTraining(training);
                 handleClose();
             })
             .catch(err => {
                 console.error('Save error:', err);
             });
-            props.saveTraining(training);
-        handleClose();
+            /*props.saveTraining(training);
+        handleClose();*/
     };
     
 
