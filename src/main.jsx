@@ -7,6 +7,7 @@ import Customers from './components/Customers.jsx';
 import Trainings from './components/Trainings.jsx';
 import Error from './components/Error.jsx'
 import Calendar from './components/Calendar.jsx'
+import Statistics from './components/Statictics.jsx';
 //import Home from './components/Home.jsx';
 
 const router = createBrowserRouter([ // Import components that are used in routes
@@ -26,6 +27,10 @@ element: <Customers />,
   path: "Calendar", // path can be defined relative to the parent path
   element: <Calendar />,
   },
+  {
+    path: "Statistics", // path can be defined relative to the parent path
+    element: <Statistics />,
+    },
 ],
 errorElement: <Error />
 }

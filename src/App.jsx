@@ -26,6 +26,9 @@ function App() {
           <Link to={"/Calendar"} style={{ textDecoration: 'none', color: 'white' }}>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Kalenteri
           </Typography></Link>
+          <Link to={"/Statistics"} style={{ textDecoration: 'none', color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Statistiikka
+          </Typography></Link>
           </nav>
          
     </Toolbar>
